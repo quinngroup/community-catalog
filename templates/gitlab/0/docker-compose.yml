@@ -2,12 +2,17 @@ gitlab-server:
   ports:
   - "${ssh_port}:22"
   - "80:80"
+  - "443:443"
   labels:
     io.rancher.sidekicks: gitlab-data
   hostname: ${gitlab_hostname}
   image: gitlab/gitlab-ce:8.5.1-ce.0
   volumes_from:
   - gitlab-data
+  environment:
+    GITLAB_OMNIBUS_CONFIG: |
+      external_url 'http://${gitlab_hostname}'
+      gitlab_rails['gitlab_shell_ssh_port'] = ${ssh_port}
 
 gitlab-data:
   labels:
